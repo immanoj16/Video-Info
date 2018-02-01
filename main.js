@@ -12,14 +12,12 @@ function createWindow() {
     protocol: 'file:',
     slashes: true
   }))
-
-  win.webContents.openDevTools()
 }
 
 app.on('ready', createWindow)
 
 ipcMain.on('video:submit', (event, path) => {
   ffmpeg.ffprobe(path, (err, metadata) => {
-    console.log('video duration is: ', metadata.format.duration);
+    win.webContents.send('video:metadata', metadata.format.duration)
   })
 })
