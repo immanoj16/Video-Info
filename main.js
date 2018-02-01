@@ -1,6 +1,7 @@
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, ipcMain} = require('electron')
 const path = require('path')
 const url = require('url')
+const ffmpeg = require('fluent-ffmpeg')
 
 let win
 function createWindow() {
@@ -16,3 +17,9 @@ function createWindow() {
 }
 
 app.on('ready', createWindow)
+
+ipcMain.on('video:submit', (event, path) => {
+  ffmpeg.ffprobe(path, (err, metadata) => {
+    console.log('video duration is: ', metadata.format.duration);
+  })
+})
